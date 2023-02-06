@@ -1,9 +1,12 @@
 package net.bot.RiceBot.service.db;
 
+import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
-import org.springframework.lang.Nullable;
 
 public interface UserService {
-    @Nullable
-    public User getById(long id);
+    public User add(User user);
+    public void deleteById(Long id);
+    public void setStateById(Long id, State state);
+    public boolean isRegistered(Long id);
+
 }
