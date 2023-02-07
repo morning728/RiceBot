@@ -28,7 +28,6 @@ public class BotConfig {
         DefaultBotOptions options = ApiContext
                 .getInstance(DefaultBotOptions.class);
 
-
         TelegramBot bot = new TelegramBot(options, telegramFacade);
         bot.setBotUserName(botUserName);
         bot.setBotToken(botToken);

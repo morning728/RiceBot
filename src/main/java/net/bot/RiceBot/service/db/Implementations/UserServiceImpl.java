@@ -39,4 +39,22 @@ public class UserServiceImpl implements UserService {
     public void setStateById(Long id, State state) {
         repository.setStateById(id, state);
     }
+
+    @Override
+    public boolean isFreeUsername(String username){
+        return repository.isFreeUsername(username).size() == 0;
+    }
+    @Override
+    public void setUsernameById(Long id, String username){
+        repository.setUsernameById(id, username);
+    }
+
+    @Override
+    public User getUserById(Long id){
+        return repository.findById(id).isEmpty() ? null : repository.findById(id).get();
+    }
+    @Override
+    public void setPasswordById(Long id, String password){
+        repository.setPasswordById(id, password);
+    }
 }
