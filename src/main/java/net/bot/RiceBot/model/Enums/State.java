@@ -12,9 +12,11 @@ public enum State {
     ASK_OLD_PWD("ASK_NEW_PWD", "changingData"),
     ASK_NEW_PWD("SUCCESS_CHANGES", "changingData"),
     SUCCESS_CHANGES(null, "changingData"),
-    FAIL_CHANGES("ASK_OLD_PWD", "changingData");
+    FAIL_CHANGES("ASK_OLD_PWD", "changingData"),
 
+    // UPLOAD FILE STATE
 
+    ASK_FOR_UPLOAD(null, "uploadFile");
 
 
 

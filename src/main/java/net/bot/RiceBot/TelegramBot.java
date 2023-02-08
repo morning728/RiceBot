@@ -10,6 +10,8 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.io.IOException;
+
 public class TelegramBot extends TelegramWebhookBot {
     private String webHookPath;
     private String botUserName;
@@ -42,9 +44,14 @@ public class TelegramBot extends TelegramWebhookBot {
 
   @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        SendMessage replyMessageToUser = telegramFacade.handleUpdate(update);
+      SendMessage replyMessageToUser = null;
+      try {
+          replyMessageToUser = telegramFacade.handleUpdate(update);
+      } catch (IOException e) {
+          throw new RuntimeException(e);
+      }
 
-        return replyMessageToUser;
+      return replyMessageToUser;
     }
 
 
