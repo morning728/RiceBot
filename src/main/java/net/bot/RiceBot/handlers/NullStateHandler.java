@@ -3,6 +3,8 @@ package net.bot.RiceBot.handlers;
 import lombok.extern.slf4j.Slf4j;
 import net.bot.RiceBot.config.BotConfig;
 import net.bot.RiceBot.model.Enums.State;
+import net.bot.RiceBot.model.Photo;
+import net.bot.RiceBot.repository.PhotoRepository;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.apache.commons.io.FileUtils;
@@ -13,33 +15,34 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.io.*;
 import java.net.URL;
+import java.sql.Date;
 
 @Slf4j
 @Component
 public class NullStateHandler implements InputMessageHandler{
+
+
 
     private final LocaleMessageService messageService;
     private final UserServiceImpl userService;
     private final ChangeDataHandler changeDataHandler;
     private final RegistrationHandler registrationHandler;
 
-    private final BotConfig bot;
 
-    public NullStateHandler(LocaleMessageService messageService, UserServiceImpl userService, ChangeDataHandler changeDataHandler, RegistrationHandler registrationHandler, BotConfig bot) {
+
+    public NullStateHandler(LocaleMessageService messageService, UserServiceImpl userService, ChangeDataHandler changeDataHandler, RegistrationHandler registrationHandler) {
         this.messageService = messageService;
         this.userService = userService;
         this.changeDataHandler = changeDataHandler;
         this.registrationHandler = registrationHandler;
-        this.bot = bot;
     }
 
     @Override
     public SendMessage handle(Message message) throws IOException {
         SendMessage reply = new SendMessage();
         reply.setChatId(message.getChatId());
-        if(message.getDocument() != null){
-            reply.setText("uploaded");
-            uploadFile(message.getDocument().getFileName(), message.getDocument().getFileId());
+        if(message.hasDocument() || message.hasPhoto()){
+            reply.setText("photos inside without needed state");
             return reply;
         }
         switch (message.getText()) {
@@ -55,6 +58,9 @@ public class NullStateHandler implements InputMessageHandler{
             case "/upload_file":
                 reply = askForUpload(message);
                 break;
+            case "/uploading_photos_mode":
+                reply = startUploadingPhotosMode(message);
+                break;
             default:
                 reply.setText("nullHandlerDefault");
                 break;
@@ -62,23 +68,7 @@ public class NullStateHandler implements InputMessageHandler{
         return reply;
     }
 
-    private void uploadFile(String fileName, String fileId) throws IOException {
-        String fileResponse;
 
-        URL url = new URL("https://api.telegram.org/bot" + bot.getBotToken() + "/getFile?file_id=" + fileId);
-
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
-            fileResponse = reader.readLine();
-        }
-
-        JSONObject jresult = new JSONObject(fileResponse);
-        String filePath =jresult.getJSONObject("result").getString("file_path");
-
-        File localFile = new File("src/main/resources/uploaded/" + fileName);
-        try(InputStream is = new URL("https://api.telegram.org/file/bot" + bot.getBotToken() + "/" + filePath).openStream()){
-            FileUtils.copyInputStreamToFile(is, localFile);
-        }
-    }
 
     private SendMessage askForUpload(Message message){
         SendMessage reply = new SendMessage();
@@ -87,6 +77,17 @@ public class NullStateHandler implements InputMessageHandler{
         reply.setText(messageService.getMessage(State.ASK_FOR_UPLOAD.getCode() + "." + State.ASK_FOR_UPLOAD));
 
         userService.setStateById(message.getChatId(), State.ASK_FOR_UPLOAD);
+
+        return reply;
+    }
+    private SendMessage startUploadingPhotosMode(Message message){
+        SendMessage reply = new SendMessage();
+
+        reply.setChatId(message.getChatId());
+
+        reply.setText(messageService.getMessage(State.PHOTO_UPLOAD_MODE.getCode() + "." + State.PHOTO_UPLOAD_MODE));
+
+        userService.setStateById(message.getChatId(), State.PHOTO_UPLOAD_MODE);
 
         return reply;
     }

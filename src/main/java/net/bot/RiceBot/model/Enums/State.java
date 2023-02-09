@@ -16,7 +16,11 @@ public enum State {
 
     // UPLOAD FILE STATE
 
-    ASK_FOR_UPLOAD(null, "uploadFile");
+    ASK_FOR_UPLOAD(null, "uploadFile"),
+
+    // UPLOAD PHOTOS
+
+    PHOTO_UPLOAD_MODE(null, "photoUploadMode");
 
 
 
