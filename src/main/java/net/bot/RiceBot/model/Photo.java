@@ -18,14 +18,14 @@ public class Photo {
     private Long id;
     @Column(name="name")
     private String name;
-    @Column(name="owner_id")
-    private Long ownerId;
+    @Column(name="owner_username")
+    private String ownerUsername;
     @Column(name="date")
     private Date date;
 
-    public Photo(String _name, Long _ownerId, Date _date){
+    public Photo(String _name, String _ownerUsername, Date _date){
         name = _name;
-        ownerId = _ownerId;
+        ownerUsername = _ownerUsername;
         date = _date;
     }
 }

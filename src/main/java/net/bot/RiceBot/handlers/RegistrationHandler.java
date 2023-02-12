@@ -1,7 +1,10 @@
 package net.bot.RiceBot.handlers;
 
+import net.bot.RiceBot.model.Account;
+import net.bot.RiceBot.model.Enums.Role;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
+import net.bot.RiceBot.repository.AccountRepository;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.springframework.stereotype.Component;
@@ -10,11 +13,15 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
 public class RegistrationHandler implements InputMessageHandler{
+
+    //TEMP
+    private final AccountRepository accountRepository;
     private final UserServiceImpl userService;
     private final LocaleMessageService messageService;
     private final State FAIL_STATE = State.FAIL_REG;
 
-    public RegistrationHandler(UserServiceImpl userService, LocaleMessageService messageService) {
+    public RegistrationHandler(AccountRepository accountRepository, UserServiceImpl userService, LocaleMessageService messageService) {
+        this.accountRepository = accountRepository;
         this.userService = userService;
         this.messageService = messageService;
     }
@@ -46,7 +53,7 @@ public class RegistrationHandler implements InputMessageHandler{
     }
 
     private String handleLogin(String message, User user){
-        if(userService.isFreeUsername(message)){
+        if(accountRepository.isFreeUsername(message).size() == 0){
             userService.setUsernameById(user.getId(), message);
             userService.setStateById(user.getId(), user.getState().next());
             return messageService.getMessage("registration." + user.getState().next().toString());
@@ -59,6 +66,8 @@ public class RegistrationHandler implements InputMessageHandler{
     private String handlePassword(String message, User user){
             userService.setPasswordById(user.getId(), message);
             userService.setStateById(user.getId(), null);
+            User added_account = userService.getUserById(user.getId());
+            accountRepository.saveAndFlush(new Account(added_account.getUsername(), added_account.getPassword(), Role.USER));
             return messageService.getMessage("registration." + user.getState().next().toString());
     }
     private String startRegistration(User user){

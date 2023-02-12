@@ -47,7 +47,7 @@ public class UploadingPhotosModeHandler implements InputMessageHandler {
         if(message.hasDocument()){
             try {
                 String fileName = uploadFile(message.getDocument().getFileId());
-                photoRepository.saveAndFlush(new Photo(fileName, message.getChatId(), date));
+                photoRepository.saveAndFlush(new Photo(fileName, userService.getUserById(message.getChatId()).getUsername(), date));
             }
             catch(Exception e){
                 log.info(e.toString());
