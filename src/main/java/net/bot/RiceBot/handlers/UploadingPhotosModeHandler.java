@@ -43,7 +43,7 @@ public class UploadingPhotosModeHandler implements InputMessageHandler {
     @Override
     public SendMessage handle(Message message) throws IOException {
         SendMessage reply = new SendMessage();
-        reply.setChatId(message.getChatId());
+        reply.setChatId(message.getChatId().toString());
         if(message.hasDocument()){
             try {
                 String fileName = uploadFile(message.getDocument().getFileId());
@@ -81,7 +81,7 @@ public class UploadingPhotosModeHandler implements InputMessageHandler {
 
 
     private SendMessage stopPhotoUploadMode(Message message){
-        SendMessage reply = new SendMessage(message.getChatId(), "Состояние переведено в нулевое, режим загрузки фото отключен!");
+        SendMessage reply = new SendMessage(message.getChatId().toString(), "Состояние переведено в нулевое, режим загрузки фото отключен!");
         userService.setStateById(message.getChatId(), null);
         date = null;
         return reply;

@@ -19,13 +19,13 @@ public class Photo {
     @Column(name="name")
     private String name;
     @Column(name="owner_username")
-    private String ownerUsername;
+    private String owner_username;
     @Column(name="date")
     private Date date;
 
     public Photo(String _name, String _ownerUsername, Date _date){
         name = _name;
-        ownerUsername = _ownerUsername;
+        owner_username = _ownerUsername;
         date = _date;
     }
 }

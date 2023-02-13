@@ -25,7 +25,7 @@ public class ChangeDataHandler implements InputMessageHandler{
     public SendMessage handle(Message message) {
         SendMessage reply = new SendMessage();
         User user = userService.getUserById(message.getChatId());
-        reply.setChatId(user.getId());
+        reply.setChatId(user.getId().toString());
         if (user.getState() == null) {
             reply.setText(startChanging(message));
         }

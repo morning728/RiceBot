@@ -30,7 +30,7 @@ public class RegistrationHandler implements InputMessageHandler{
     public SendMessage handle(Message message) {
         SendMessage reply = new SendMessage();
         User user = userService.getUserById(message.getChatId());
-        reply.setChatId(user.getId());
+        reply.setChatId(user.getId().toString());
         if (user.getState() == null) {
             reply.setText(startRegistration(user));
         }
@@ -67,7 +67,7 @@ public class RegistrationHandler implements InputMessageHandler{
             userService.setPasswordById(user.getId(), message);
             userService.setStateById(user.getId(), null);
             User added_account = userService.getUserById(user.getId());
-            accountRepository.saveAndFlush(new Account(added_account.getUsername(), added_account.getPassword(), Role.USER));
+            accountRepository.saveAndFlush(new Account(added_account.getUsername(), message, Role.USER));
             return messageService.getMessage("registration." + user.getState().next().toString());
     }
     private String startRegistration(User user){
