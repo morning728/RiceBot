@@ -19,14 +19,15 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiValidationException;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -87,7 +88,6 @@ public class PhotoRequestHandler implements InputMessageHandler{
         List<Photo> photos = photoRepository.getPhotos(userService.getUserById(message.getChatId()).getUsername(), date);
         //SendPhoto photoMessage = new SendPhoto();
         List<InputMedia> mediaPhotos = new ArrayList<>();
-        InputMedia n = new InputMediaPhoto();
         for (Photo photo: photos
              ) {
             InputMedia singlePhoto = new InputMediaPhoto();
@@ -103,7 +103,6 @@ public class PhotoRequestHandler implements InputMessageHandler{
         Date secondDate = PhotoHandler.parseDate(Arrays.asList(message.getText().split(" ")).get(1).split("-")[1]);
         List<Photo> photos = photoRepository.getPhotos(userService.getUserById(message.getChatId()).getUsername(), firstDate, secondDate);
         List<InputMedia> mediaPhotos = new ArrayList<>();
-        InputMedia n = new InputMediaPhoto();
         for (Photo photo: photos
         ) {
             InputMedia singlePhoto = new InputMediaPhoto();
@@ -114,9 +113,9 @@ public class PhotoRequestHandler implements InputMessageHandler{
     }
 
     private void sendPhotos(List<InputMedia> medias, Message message) throws TelegramApiException, IOException {
-        if(medias.size() == 0) {
+        if (medias.size() == 0) {
             sender.execute(new SendMessage(message.getChatId().toString(), "Ни одного фото найдено не было"));
-        } else if(medias.size() == 1){
+        } else if (medias.size() == 1) {
             sender.execute(new SendPhoto(message.getChatId().toString(), new InputFile(medias.get(0).getNewMediaFile())));
         } else if (medias.size() <= 10) {
             sender.execute(new SendMediaGroup(message.getChatId().toString(), medias));
@@ -132,7 +131,7 @@ public class PhotoRequestHandler implements InputMessageHandler{
             try(ZipOutputStream zout = new ZipOutputStream(new FileOutputStream("src/main/resources/" + name));)
             {
                 for (InputMedia media: medias
-                     ) {
+                ) {
                     FileInputStream fis= new FileInputStream(media.getNewMediaFile());
                     ZipEntry entry = new ZipEntry("photo" + i++ + ".png");
                     zout.putNextEntry(entry);

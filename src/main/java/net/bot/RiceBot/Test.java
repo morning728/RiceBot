@@ -9,6 +9,6 @@ import static net.bot.RiceBot.service.PhotoHandler.parseDate;
 
 public class Test {
     public static void main(String[] args) {
-        System.out.println(parseDate("1.2.2020"));
+        //System.out.println(parseDate("1.2.2020"));
     }
 }
