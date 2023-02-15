@@ -9,15 +9,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.meta.ApiContext;
+//import org.telegram.telegrambots.meta.ApiContext;
 
 @Configuration
 @Data
 @ConfigurationProperties(prefix = "telegrambot")
 public class BotConfig {
-    private String webHookPath;
+    private static String webHookPath;
     private String botUserName;
-    private String botToken;
+    public String botToken;
 
     private DefaultBotOptions.ProxyType proxyType;
     private String proxyHost;
@@ -25,9 +25,8 @@ public class BotConfig {
 
     @Bean
     public TelegramBot TelegramBot(TelegramFacade telegramFacade) {
-        DefaultBotOptions options = ApiContext
-                .getInstance(DefaultBotOptions.class);
-
+        DefaultBotOptions options = new DefaultBotOptions();//ApiContext
+                //.getInstance(DefaultBotOptions.class);
 
         TelegramBot bot = new TelegramBot(options, telegramFacade);
         bot.setBotUserName(botUserName);
