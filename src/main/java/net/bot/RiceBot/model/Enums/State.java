@@ -4,8 +4,11 @@ public enum State {
     // REGISTRATION
     ASK_LOGIN("ASK_PASSWORD", "registration"),
     ASK_PASSWORD("SUCCESS_REG", "registration"),
-    SUCCESS_REG(null, "registration"),
     FAIL_REG("ASK_LOGIN", "registration"),
+
+    // LOGIN
+
+    LOGIN(null, "login"),
 
     // CHANGING DATA
 

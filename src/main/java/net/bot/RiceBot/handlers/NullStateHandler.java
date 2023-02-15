@@ -1,9 +1,6 @@
 package net.bot.RiceBot.handlers;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bot.RiceBot.model.Enums.State;
-import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
-import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -19,7 +16,7 @@ import java.util.Map;
 @Component
 public class NullStateHandler implements InputMessageHandler{
     private final ChangeDataHandler changeDataHandler;
-    private final RegistrationHandler registrationHandler;
+    private final RegLoginHandler regLoginHandler;
     private final PhotoRequestHandler photoRequestHandler;
     private final PhotoMiniHandler photoMiniHandler;
     private final HelpHandler helpHandler;
@@ -29,20 +26,21 @@ public class NullStateHandler implements InputMessageHandler{
 
 
 
-    public NullStateHandler(ChangeDataHandler changeDataHandler, RegistrationHandler registrationHandler, PhotoRequestHandler photoRequestHandler, PhotoMiniHandler photoMiniHandler, HelpHandler helpHandler) {
+    public NullStateHandler(ChangeDataHandler changeDataHandler, RegLoginHandler regLoginHandler, PhotoRequestHandler photoRequestHandler, PhotoMiniHandler photoMiniHandler, HelpHandler helpHandler) {
         this.changeDataHandler = changeDataHandler;
-        this.registrationHandler = registrationHandler;
+        this.regLoginHandler = regLoginHandler;
         this.photoRequestHandler = photoRequestHandler;
         this.photoMiniHandler = photoMiniHandler;
         this.helpHandler = helpHandler;
 
-        connections.put("/registration", registrationHandler);
+        connections.put("/registration", regLoginHandler);
         connections.put("/change_password", changeDataHandler);
         connections.put("/get_photos", photoRequestHandler);
         connections.put("/get_all_dates", photoMiniHandler);
         connections.put("/help", helpHandler);
         connections.put("/upload_file", helpHandler);
         connections.put("/uploading_photos_mode", helpHandler);
+        connections.put("/login", helpHandler);
     }
 
     @Override

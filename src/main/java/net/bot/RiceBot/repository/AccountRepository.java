@@ -14,4 +14,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Transactional
     @Query("FROM Account a WHERE  a.username = :username")
     public List<Account> isFreeUsername(@Param("username")String username);
+
+    @Modifying
+    @Transactional
+    @Query("FROM Account a WHERE  a.username = :username AND a.password = :password")
+    public List<Account> getAccountByLonAndPass(@Param("username")String username, @Param("password")String password);
 }

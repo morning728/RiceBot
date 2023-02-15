@@ -59,10 +59,14 @@ public class PhotoMiniHandler implements InputMessageHandler{
                 PhotoHandler.parseDate("1.1.1970"),
                 new Date(System.currentTimeMillis())
         );
-        Set<Date> dates = allPhotos.stream().
-                sorted(Comparator.comparing(Photo::getDate)).
+        List<Date> dates = allPhotos.stream().
                 map(Photo::getDate).
-                collect(Collectors.toSet());
+                collect(Collectors.toSet()).stream().
+                sorted(java.util.Date::compareTo).
+                collect(Collectors.toList());
+
+
+
         for (Date date: dates
              ) {
             if(currentYear < date.getYear() + 1900){
@@ -100,10 +104,11 @@ public class PhotoMiniHandler implements InputMessageHandler{
                 PhotoHandler.parseDate(firstDate),
                 PhotoHandler.parseDate(secondDate)
         );
-        Set<Date> dates = allPhotos.stream().
-                sorted(Comparator.comparing(Photo::getDate)).
+        List<Date> dates = allPhotos.stream().
                 map(Photo::getDate).
-                collect(Collectors.toSet());
+                collect(Collectors.toSet()).stream().
+                sorted(java.util.Date::compareTo).
+                collect(Collectors.toList());
         answer.append(current).
                 append(type);
         for (Date date: dates

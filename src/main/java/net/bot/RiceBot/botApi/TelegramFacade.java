@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.bot.RiceBot.handlers.ChangeDataHandler;
 import net.bot.RiceBot.handlers.NullStateHandler;
-import net.bot.RiceBot.handlers.RegistrationHandler;
+import net.bot.RiceBot.handlers.RegLoginHandler;
 import net.bot.RiceBot.handlers.UploadingPhotosModeHandler;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.*;
 
@@ -21,15 +20,15 @@ import java.io.*;
 @Slf4j
 public class TelegramFacade {
 
-    private final RegistrationHandler registrationHandler;
+    private final RegLoginHandler regLoginHandler;
     private final NullStateHandler nullStateHandler;
     private final ChangeDataHandler changeDataHandler;
     private final UserServiceImpl userService;
     private final UploadingPhotosModeHandler uploadingPhotosModeHandler;
 
     @Autowired
-    public TelegramFacade(RegistrationHandler registrationHandler, NullStateHandler nullStateHandler, ChangeDataHandler changeDataHandler, UserServiceImpl userService, UploadingPhotosModeHandler uploadingPhotosModeHandler) {
-        this.registrationHandler = registrationHandler;
+    public TelegramFacade(RegLoginHandler regLoginHandler, NullStateHandler nullStateHandler, ChangeDataHandler changeDataHandler, UserServiceImpl userService, UploadingPhotosModeHandler uploadingPhotosModeHandler) {
+        this.regLoginHandler = regLoginHandler;
         this.nullStateHandler = nullStateHandler;
         this.changeDataHandler = changeDataHandler;
         this.userService = userService;
@@ -63,7 +62,8 @@ public class TelegramFacade {
         else{
             switch (userService.getUserById(message.getChatId()).getState().getCode()){
                 case "registration":
-                    replyMessage = registrationHandler.handle(message);
+                case "login":
+                    replyMessage = regLoginHandler.handle(message);
                     break;
                 case "changingData":
                     replyMessage = changeDataHandler.handle(message);
