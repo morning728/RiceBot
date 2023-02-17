@@ -1,6 +1,7 @@
 package net.bot.RiceBot.handlers;
 
 import lombok.extern.slf4j.Slf4j;
+import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -20,18 +21,22 @@ public class NullStateHandler implements InputMessageHandler{
     private final PhotoRequestHandler photoRequestHandler;
     private final PhotoMiniHandler photoMiniHandler;
     private final HelpHandler helpHandler;
+    private final ChatGPTHandler chatHandler;
+    private final UserServiceImpl userService;
 
     private final Map<String, InputMessageHandler> connections = new HashMap<>();
 
 
 
 
-    public NullStateHandler(ChangeDataHandler changeDataHandler, RegLoginHandler regLoginHandler, PhotoRequestHandler photoRequestHandler, PhotoMiniHandler photoMiniHandler, HelpHandler helpHandler) {
+    public NullStateHandler(ChangeDataHandler changeDataHandler, RegLoginHandler regLoginHandler, PhotoRequestHandler photoRequestHandler, PhotoMiniHandler photoMiniHandler, HelpHandler helpHandler, ChatGPTHandler chatHandler, UserServiceImpl userService) {
         this.changeDataHandler = changeDataHandler;
         this.regLoginHandler = regLoginHandler;
         this.photoRequestHandler = photoRequestHandler;
         this.photoMiniHandler = photoMiniHandler;
         this.helpHandler = helpHandler;
+        this.chatHandler = chatHandler;
+        this.userService = userService;
 
         connections.put("/registration", regLoginHandler);
         connections.put("/change_password", changeDataHandler);
@@ -40,7 +45,9 @@ public class NullStateHandler implements InputMessageHandler{
         connections.put("/help", helpHandler);
         connections.put("/upload_file", helpHandler);
         connections.put("/uploading_photos_mode", helpHandler);
-        connections.put("/login", helpHandler);
+        connections.put("/login", regLoginHandler);
+        connections.put("/my_data", helpHandler);
+        connections.put("/chat", chatHandler);
     }
 
     @Override
@@ -52,10 +59,13 @@ public class NullStateHandler implements InputMessageHandler{
             return reply;
         }
         List<String> splitedMessage = Arrays.asList(message.getText().split(" "));
-        if(connections.containsKey(splitedMessage.get(0)))
+        if(connections.containsKey(splitedMessage.get(0))) {
             reply = connections.get(splitedMessage.get(0)).handle(message);
-        else
+        }
+        else {
+            userService.getUserById(message.getChatId());
             reply.setText("nullHandlerDefault");
+        }
         return reply;
     }
 }

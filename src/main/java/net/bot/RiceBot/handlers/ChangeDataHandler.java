@@ -22,11 +22,11 @@ public class ChangeDataHandler implements InputMessageHandler{
     }
 
     @Override
-    public SendMessage handle(Message message) {
+    public SendMessage handle(Message message)  {
         SendMessage reply = new SendMessage();
         User user = userService.getUserById(message.getChatId());
         reply.setChatId(user.getId().toString());
-        if (user.getState() == null) {
+        if (user.getState() == State.NULL) {
             reply.setText(startChanging(message));
         }
         else {
@@ -49,7 +49,7 @@ public class ChangeDataHandler implements InputMessageHandler{
         userService.setStateById(message.getChatId(), State.ASK_OLD_PWD);
         return messageService.getMessage("changingData." + State.ASK_OLD_PWD);
     }
-    private String handleOldPwd(Message message){
+    private String handleOldPwd(Message message) {
         if(Objects.equals(userService.getUserById(message.getChatId()).getPassword(), message.getText())){
             userService.setStateById(message.getChatId(), State.ASK_NEW_PWD);
             return messageService.getMessage("changingData." + State.ASK_NEW_PWD);
@@ -61,7 +61,7 @@ public class ChangeDataHandler implements InputMessageHandler{
     }
     private String handleNewPwd(Message message){
         userService.setPasswordById(message.getChatId(),message.getText());
-        userService.setStateById(message.getChatId(), null);
+        userService.setStateById(message.getChatId(), State.NULL);
         return messageService.getMessage("changingData." + State.SUCCESS_CHANGES);
     }
 
