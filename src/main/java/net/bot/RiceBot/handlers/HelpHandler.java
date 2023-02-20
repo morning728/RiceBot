@@ -1,6 +1,8 @@
 package net.bot.RiceBot.handlers;
 
+
 import net.bot.RiceBot.model.Enums.State;
+import net.bot.RiceBot.model.User;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.springframework.stereotype.Component;
@@ -22,22 +24,16 @@ public class HelpHandler implements InputMessageHandler{
     public SendMessage handle(Message message) {
         SendMessage reply = new SendMessage();
         reply.setChatId(message.getChatId().toString());
-        switch(message.getText()){
-            case "/help":
-                reply.setText(messageService.getMessage("standard.HELP_PHRASE"));
-                break;
-            case "/upload_file":
-                reply = startProcess(message, State.ASK_FOR_UPLOAD);
-                break;
-            case "/uploading_photos_mode":
-                reply = startProcess(message, State.PHOTO_UPLOAD_MODE);
-                break;
-            case "/login":
-                reply = startProcess(message, State.LOGIN);
-                break;
-            default:
-                reply.setText("Что-то на помогательском...");
-                break;
+        switch (message.getText()) {
+            case "/help" -> reply.setText(messageService.getMessage("standard.HELP_PHRASE"));
+            case "/upload_file" -> reply = startProcess(message, State.ASK_FOR_UPLOAD);
+            case "/uploading_photos_mode" -> reply = startProcess(message, State.PHOTO_UPLOAD_MODE);
+            //case "/login" -> reply = startProcess(message, State.LOGIN);
+            case "/my_data" -> {
+                User user = userService.getUserById(message.getChatId());
+                reply.setText("Login: " + user.getUsername() + "\n" + "Password: " + user.getPassword());
+            }
+            default -> reply.setText("Что-то на помогательском...");
         }
 
         return reply;

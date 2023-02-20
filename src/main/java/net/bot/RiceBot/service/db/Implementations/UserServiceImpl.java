@@ -1,5 +1,7 @@
 package net.bot.RiceBot.service.db.Implementations;
 
+
+import net.bot.RiceBot.model.Enums.Role;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
 import net.bot.RiceBot.repository.UserRepository;
@@ -7,6 +9,8 @@ import net.bot.RiceBot.service.db.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,6 +45,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void setRoleById(Long id, Role role) {
+        repository.setRoleById(id, role);
+    }
+
+    @Override
     public boolean isFreeUsername(String username){
         return repository.isFreeUsername(username).size() == 0;
     }
@@ -49,8 +58,16 @@ public class UserServiceImpl implements UserService {
         repository.setUsernameById(id, username);
     }
 
+
     @Override
-    public User getUserById(Long id){
+    public User getUserById(Long id) {
+        if (repository.findById(id).isEmpty()){
+            repository.saveAndFlush(new User(id));
+        }
+        return repository.findById(id).get();
+    }
+    @Override
+    public User getUserByIdSafly(Long id) {
         return repository.findById(id).isEmpty() ? null : repository.findById(id).get();
     }
     @Override

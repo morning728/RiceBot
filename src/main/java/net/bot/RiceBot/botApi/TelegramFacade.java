@@ -6,6 +6,7 @@ import net.bot.RiceBot.handlers.ChangeDataHandler;
 import net.bot.RiceBot.handlers.NullStateHandler;
 import net.bot.RiceBot.handlers.RegLoginHandler;
 import net.bot.RiceBot.handlers.UploadingPhotosModeHandler;
+import net.bot.RiceBot.model.Enums.Role;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.*;
+import java.util.Objects;
 
 @Component
 @Slf4j
@@ -53,33 +55,39 @@ public class TelegramFacade {
         return replyMessage;
     }
 
-    private SendMessage handleInputMessage(Message message) throws IOException {
+    private SendMessage handleInputMessage(Message message) throws IOException { // ASK FOR UPLOAD
         SendMessage replyMessage = new SendMessage();
-        if(userService.getUserById(message.getChatId()).getState() == null || userService.getUserById(message.getChatId()).getState() == State.ASK_FOR_UPLOAD) {
+        if(Objects.equals(message.getText(), "/stop")){
+            replyMessage = resetState(message);
+        }
+        else if(Objects.equals(message.getText(), "/registration") ||
+                Objects.equals(message.getText(), "/login") ||
+                Objects.equals(userService.getUserById(message.getChatId()).getState().getCode(), "registration") ||
+                Objects.equals(userService.getUserById(message.getChatId()).getState().getCode(), "login")){
+            replyMessage = regLoginHandler.handle(message);
+        }
+        else if(userService.getUserById(message.getChatId()).getRole() == Role.UNREGISTERED){
+            return new SendMessage(message.getChatId().toString(), "Зарегайся, чтоб пользоваться ботом(/registration)");
+        }
+        else if(userService.getUserById(message.getChatId()).getState() == State.NULL) {
             replyMessage = nullStateHandler.handle(message);
-
         }
         else{
-            switch (userService.getUserById(message.getChatId()).getState().getCode()){
-                case "registration":
-                case "login":
-                    replyMessage = regLoginHandler.handle(message);
-                    break;
-                case "changingData":
-                    replyMessage = changeDataHandler.handle(message);
-                    break;
-                case "photoUploadMode":
-                    replyMessage = uploadingPhotosModeHandler.handle(message);
-                    break;
-                default:
-                    replyMessage.setText("default facade");
-                    break;
+            switch (userService.getUserById(message.getChatId()).getState().getCode()) {
+                case "registration", "login" -> replyMessage = regLoginHandler.handle(message);
+                case "changingData" -> replyMessage = changeDataHandler.handle(message);
+                case "photoUploadMode" -> replyMessage = uploadingPhotosModeHandler.handle(message);
+                default -> replyMessage.setText("default facade");
             }
         }
         return replyMessage;
     }
 
-
+    private SendMessage resetState(Message message){
+        userService.getUserById(message.getChatId());
+        userService.setStateById(message.getChatId(), State.NULL);
+        return new SendMessage(message.getChatId().toString(), "Состояние было сброшено");
+    }
 
 
 }

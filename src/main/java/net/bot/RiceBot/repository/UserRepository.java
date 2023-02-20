@@ -1,5 +1,6 @@
 package net.bot.RiceBot.repository;
 
+import net.bot.RiceBot.model.Enums.Role;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("update User u set u.state = :state where u.id = :id")
     public void setStateById(@Param("id")Long id, @Param("state")State state);
+
+    @Modifying
+    @Transactional
+    @Query("update User u set u.role = :role where u.id = :id")
+    public void setRoleById(@Param("id")Long id, @Param("role") Role role);
 
     @Modifying
     @Transactional

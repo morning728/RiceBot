@@ -61,9 +61,8 @@ public class PhotoMiniHandler implements InputMessageHandler{
         );
         List<Date> dates = allPhotos.stream().
                 map(Photo::getDate).
-                collect(Collectors.toSet()).stream().
-                sorted(java.util.Date::compareTo).
-                collect(Collectors.toList());
+                distinct().sorted(java.util.Date::compareTo).
+                toList();
 
 
 
@@ -106,8 +105,7 @@ public class PhotoMiniHandler implements InputMessageHandler{
         );
         List<Date> dates = allPhotos.stream().
                 map(Photo::getDate).
-                collect(Collectors.toSet()).stream().
-                sorted(java.util.Date::compareTo).
+                distinct().sorted(java.util.Date::compareTo).
                 collect(Collectors.toList());
         answer.append(current).
                 append(type);

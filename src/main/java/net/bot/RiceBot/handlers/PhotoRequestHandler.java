@@ -82,7 +82,7 @@ public class PhotoRequestHandler implements InputMessageHandler{
         return reply;
     }
 
-    private List<InputMedia> getMediasByDate(Message message){
+    private List<InputMedia> getMediasByDate(Message message) {
         int fileNum = 0;
         Date date = PhotoHandler.parseDate(Arrays.asList(message.getText().split(" ")).get(1));
         List<Photo> photos = photoRepository.getPhotos(userService.getUserById(message.getChatId()).getUsername(), date);
@@ -97,7 +97,7 @@ public class PhotoRequestHandler implements InputMessageHandler{
         return mediaPhotos;
 
     }
-    private List<InputMedia> getMediasByRange(Message message){
+    private List<InputMedia> getMediasByRange(Message message) {
         int fileNum = 0;
         Date firstDate = PhotoHandler.parseDate(Arrays.asList(message.getText().split(" ")).get(1).split("-")[0]);
         Date secondDate = PhotoHandler.parseDate(Arrays.asList(message.getText().split(" ")).get(1).split("-")[1]);

@@ -2,6 +2,7 @@ package net.bot.RiceBot.handlers;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bot.RiceBot.config.BotConfig;
+import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.Photo;
 import net.bot.RiceBot.repository.PhotoRepository;
 import net.bot.RiceBot.service.PhotoHandler;
@@ -82,7 +83,7 @@ public class UploadingPhotosModeHandler implements InputMessageHandler {
 
     private SendMessage stopPhotoUploadMode(Message message){
         SendMessage reply = new SendMessage(message.getChatId().toString(), "Состояние переведено в нулевое, режим загрузки фото отключен!");
-        userService.setStateById(message.getChatId(), null);
+        userService.setStateById(message.getChatId(), State.NULL);
         date = null;
         return reply;
     }
