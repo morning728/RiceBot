@@ -56,7 +56,7 @@ public class RegLoginHandler implements InputMessageHandler {
 
         return reply;
     }
-    private SendMessage startProcess(Message message, State state){
+    SendMessage startProcess(Message message, State state){
         SendMessage reply = new SendMessage();
         reply.setChatId(message.getChatId().toString());
         reply.setText(messageService.getMessage(state.getCode() + "." + state.toString()));
@@ -65,12 +65,9 @@ public class RegLoginHandler implements InputMessageHandler {
 
         return reply;
     }
-//    private String startRegistration(User user) {
-//        userService.setStateById(user.getId(), State.ASK_LOGIN);
-//        return messageService.getMessage("registration." + State.ASK_LOGIN);
-//    }
 
-    private String handleLogin(String message, User user) {
+
+    String handleLogin(String message, User user) {
         if (accountRepository.isFreeUsername(message).size() == 0) {
             userService.setUsernameById(user.getId(), message);
             userService.setStateById(user.getId(), user.getState().next());
@@ -81,7 +78,7 @@ public class RegLoginHandler implements InputMessageHandler {
         }
     }
 
-    private String handlePassword(String message, User user) {
+    String handlePassword(String message, User user) {
         userService.setPasswordById(user.getId(), message);
         userService.setStateById(user.getId(), State.NULL);
         userService.setRoleById(user.getId(), Role.USER);
@@ -91,7 +88,7 @@ public class RegLoginHandler implements InputMessageHandler {
     }
 
 
-    private String login(Message message)  {
+    String login(Message message)  {
         List<String> data = Arrays.asList(message.getText().split(" "));
         User user = userService.getUserById(message.getChatId());
         if (data.size() != 2) {
