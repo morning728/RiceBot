@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Chat;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.ArrayList;
 
@@ -52,4 +55,23 @@ class RegLoginHandlerTest {
 
     }
 
+    @Test
+    public void handle() {
+        Message message = new Message();
+        message.setText("/registration");
+        message.setChat(new Chat(1L, "type"));
+
+        Mockito.doReturn(new User(1L))
+                .when(userService)
+                .getUserById(message.getChatId());
+        Mockito.doReturn("Введи логин, ек макарек")
+                .when(messageService)
+                .getMessage("registration.ASK_LOGIN");
+
+        SendMessage res = handler.handle(message);
+
+        Assert.assertEquals("Введи логин, ек макарек", res.getText());
+        Assert.assertEquals("1", res.getChatId());
+
+    }
 }
