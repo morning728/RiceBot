@@ -3,10 +3,9 @@ package net.bot.RiceBot.handlers;
 import lombok.extern.slf4j.Slf4j;
 import net.bot.RiceBot.config.BotConfig;
 import net.bot.RiceBot.model.Photo;
-import net.bot.RiceBot.repository.PhotoRepository;
 import net.bot.RiceBot.service.PhotoHandler;
-import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
-import net.bot.RiceBot.service.messages.LocaleMessageService;
+import net.bot.RiceBot.service.db.Implementations.PhotoServiceImplDB;
+import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -35,11 +34,11 @@ import java.util.zip.ZipOutputStream;
 @Component
 public class PhotoRequestHandler implements InputMessageHandler{
 
-    private final UserServiceImpl userService;
+    private final UserServiceImplDB userService;
     //TEMP
     private final BotConfig bot;
-    private final PhotoRepository photoRepository;
-    private final LocaleMessageService messageService;
+    private final PhotoServiceImplDB photoService;
+
     private final DefaultAbsSender sender = new DefaultAbsSender(new DefaultBotOptions()) {
         @Override
         public String getBotToken() {
@@ -47,12 +46,11 @@ public class PhotoRequestHandler implements InputMessageHandler{
         }
     };
 
-    public PhotoRequestHandler(UserServiceImpl userService, BotConfig bot, PhotoRepository photoRepository, LocaleMessageService messageService) {
+    public PhotoRequestHandler(UserServiceImplDB userService, BotConfig bot, PhotoServiceImplDB photoService) {
 
         this.userService = userService;
         this.bot = bot;
-        this.photoRepository = photoRepository;
-        this.messageService = messageService;
+        this.photoService = photoService;
     }
 
     @Override
@@ -85,7 +83,7 @@ public class PhotoRequestHandler implements InputMessageHandler{
     private List<InputMedia> getMediasByDate(Message message) {
         int fileNum = 0;
         Date date = PhotoHandler.parseDate(Arrays.asList(message.getText().split(" ")).get(1));
-        List<Photo> photos = photoRepository.getPhotos(userService.getUserById(message.getChatId()).getUsername(), date);
+        List<Photo> photos = photoService.getPhotos(userService.getUserById(message.getChatId()).getUsername(), date);
         //SendPhoto photoMessage = new SendPhoto();
         List<InputMedia> mediaPhotos = new ArrayList<>();
         for (Photo photo: photos
@@ -101,7 +99,7 @@ public class PhotoRequestHandler implements InputMessageHandler{
         int fileNum = 0;
         Date firstDate = PhotoHandler.parseDate(Arrays.asList(message.getText().split(" ")).get(1).split("-")[0]);
         Date secondDate = PhotoHandler.parseDate(Arrays.asList(message.getText().split(" ")).get(1).split("-")[1]);
-        List<Photo> photos = photoRepository.getPhotos(userService.getUserById(message.getChatId()).getUsername(), firstDate, secondDate);
+        List<Photo> photos = photoService.getPhotos(userService.getUserById(message.getChatId()).getUsername(), firstDate, secondDate);
         List<InputMedia> mediaPhotos = new ArrayList<>();
         for (Photo photo: photos
         ) {

@@ -4,10 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.bot.RiceBot.config.BotConfig;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.Photo;
-import net.bot.RiceBot.repository.PhotoRepository;
 import net.bot.RiceBot.service.PhotoHandler;
-import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
-import net.bot.RiceBot.service.messages.LocaleMessageService;
+import net.bot.RiceBot.service.db.Implementations.PhotoServiceImplDB;
+import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +24,15 @@ import java.util.List;
 @Component
 public class UploadingPhotosModeHandler implements InputMessageHandler {
     //TEEEEEEMP
-    private final PhotoRepository photoRepository;
-    private final LocaleMessageService messageService;
-    private final UserServiceImpl userService;
+    private final PhotoServiceImplDB photoService;
+    private final UserServiceImplDB userService;
     private final BotConfig bot;
 
     private Date date = null;
 
     @Autowired
-    public UploadingPhotosModeHandler(PhotoRepository photoRepository, LocaleMessageService messageService, UserServiceImpl userService, BotConfig bot) {
-        this.photoRepository = photoRepository;
-        this.messageService = messageService;
+    public UploadingPhotosModeHandler(PhotoServiceImplDB photoService, UserServiceImplDB userService, BotConfig bot) {
+        this.photoService = photoService;
         this.userService = userService;
         this.bot = bot;
     }
@@ -48,7 +45,7 @@ public class UploadingPhotosModeHandler implements InputMessageHandler {
         if(message.hasDocument()){
             try {
                 String fileName = uploadFile(message.getDocument().getFileId());
-                photoRepository.saveAndFlush(new Photo(fileName, userService.getUserById(message.getChatId()).getUsername(), date));
+                photoService.addPhoto(new Photo(fileName, userService.getUserById(message.getChatId()).getUsername(), date));
             }
             catch(Exception e){
                 log.info(e.toString());

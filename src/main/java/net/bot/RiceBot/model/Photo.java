@@ -1,5 +1,6 @@
 package net.bot.RiceBot.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.bot.RiceBot.model.Enums.Role;
@@ -12,6 +13,7 @@ import java.sql.Date;
 @Entity
 @Table(name="photos")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,35 +2,31 @@ package net.bot.RiceBot.handlers;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bot.RiceBot.model.Photo;
-import net.bot.RiceBot.repository.PhotoRepository;
 import net.bot.RiceBot.service.PhotoHandler;
-import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import net.bot.RiceBot.service.db.Implementations.PhotoServiceImplDB;
+import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.sql.Date;
 import java.text.ParseException;
-import java.time.Year;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Component
 @Slf4j
 public class PhotoMiniHandler implements InputMessageHandler{
-    private final UserServiceImpl userService;
+    private final UserServiceImplDB userService;
 
-    private final PhotoRepository photoRepository;
-    @Autowired
-    public PhotoMiniHandler(UserServiceImpl userService, PhotoRepository photoRepository) {
+    private final PhotoServiceImplDB photoService;
+
+    public PhotoMiniHandler(UserServiceImplDB userService, PhotoServiceImplDB photoService) {
         this.userService = userService;
-        this.photoRepository = photoRepository;
+        this.photoService = photoService;
     }
+
 
     @Override
     public SendMessage handle(Message message) {
@@ -54,7 +50,7 @@ public class PhotoMiniHandler implements InputMessageHandler{
     private String getAllDates(Message message) throws ParseException {
         StringBuilder answer = new StringBuilder("");
         int currentYear = 0;
-        List<Photo> allPhotos = photoRepository.getPhotos(
+        List<Photo> allPhotos = photoService.getPhotos(
                 userService.getUserById(message.getChatId()).getUsername(),
                 PhotoHandler.parseDate("1.1.1970"),
                 new Date(System.currentTimeMillis())
@@ -98,7 +94,7 @@ public class PhotoMiniHandler implements InputMessageHandler{
         else{
             return "Что-то пошло не так, проверь формат (/get_all_dates, /get_all_dates yyyy, /get_all_dates mm.yyyy)";
         }
-        List<Photo> allPhotos = photoRepository.getPhotos(
+        List<Photo> allPhotos = photoService.getPhotos(
                 userService.getUserById(message.getChatId()).getUsername(),
                 PhotoHandler.parseDate(firstDate),
                 PhotoHandler.parseDate(secondDate)
@@ -106,7 +102,7 @@ public class PhotoMiniHandler implements InputMessageHandler{
         List<Date> dates = allPhotos.stream().
                 map(Photo::getDate).
                 distinct().sorted(java.util.Date::compareTo).
-                collect(Collectors.toList());
+                toList();
         answer.append(current).
                 append(type);
         for (Date date: dates

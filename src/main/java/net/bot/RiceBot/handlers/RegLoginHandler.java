@@ -5,8 +5,8 @@ import net.bot.RiceBot.model.Account;
 import net.bot.RiceBot.model.Enums.Role;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
-import net.bot.RiceBot.repository.AccountRepository;
-import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
+import net.bot.RiceBot.service.db.Implementations.AccountServiceImplDB;
+import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,16 +19,17 @@ import java.util.List;
 public class RegLoginHandler implements InputMessageHandler {
 
     //TEMP
-    private final AccountRepository accountRepository;
-    private final UserServiceImpl userService;
+    private final AccountServiceImplDB accountService;
+    private final UserServiceImplDB userService;
     private final LocaleMessageService messageService;
     private final State FAIL_STATE = State.FAIL_REG;
 
-    public RegLoginHandler(AccountRepository accountRepository, UserServiceImpl userService, LocaleMessageService messageService) {
-        this.accountRepository = accountRepository;
+    public RegLoginHandler(AccountServiceImplDB accountService, UserServiceImplDB userService, LocaleMessageService messageService) {
+        this.accountService = accountService;
         this.userService = userService;
         this.messageService = messageService;
     }
+
 
     @Override
     public SendMessage handle(Message message){
@@ -68,7 +69,7 @@ public class RegLoginHandler implements InputMessageHandler {
 
 
     String handleLogin(String message, User user) {
-        if (accountRepository.isFreeUsername(message).size() == 0) {
+        if (accountService.isFreeUsername(message)) {
             userService.setUsernameById(user.getId(), message);
             userService.setStateById(user.getId(), user.getState().next());
             return messageService.getMessage("registration." + user.getState().next().toString());
@@ -83,7 +84,7 @@ public class RegLoginHandler implements InputMessageHandler {
         userService.setStateById(user.getId(), State.NULL);
         userService.setRoleById(user.getId(), Role.USER);
         User added_account = userService.getUserById(user.getId());
-        accountRepository.saveAndFlush(new Account(added_account.getUsername(), message, Role.USER));
+        accountService.addAccount(new Account(added_account.getUsername(), message, Role.USER));
         return messageService.getMessage("registration." + "SUCCESS_REG");
     }
 
@@ -95,11 +96,11 @@ public class RegLoginHandler implements InputMessageHandler {
             return messageService.getMessage("login.FAIL");
         }
 
-        List<Account> account = accountRepository.getAccountByLonAndPass(data.get(0), data.get(1));
-        if (!account.isEmpty()) {
-            userService.setUsernameById(message.getChatId(), account.get(0).getUsername());
-            userService.setPasswordById(message.getChatId(), account.get(0).getPassword());
-            userService.setRoleById(message.getChatId(), account.get(0).getRole());
+        Account account = accountService.getAccountByLonAndPass(data.get(0), data.get(1));
+        if (account != null) {
+            userService.setUsernameById(message.getChatId(), account.getUsername());
+            userService.setPasswordById(message.getChatId(), account.getPassword());
+            userService.setRoleById(message.getChatId(), account.getRole());
             return messageService.getMessage("login.SUCCESS");
         }
 

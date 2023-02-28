@@ -3,7 +3,7 @@ package net.bot.RiceBot.handlers;
 
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
-import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
+import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,9 +13,9 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Component
 public class HelpHandler implements InputMessageHandler{
     private final LocaleMessageService messageService;
-    private final UserServiceImpl userService;
+    private final UserServiceImplDB userService;
 
-    public HelpHandler(LocaleMessageService messageService, UserServiceImpl userService) {
+    public HelpHandler(LocaleMessageService messageService, UserServiceImplDB userService) {
         this.messageService = messageService;
         this.userService = userService;
     }

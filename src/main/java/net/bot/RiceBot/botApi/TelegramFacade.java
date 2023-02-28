@@ -8,7 +8,7 @@ import net.bot.RiceBot.handlers.RegLoginHandler;
 import net.bot.RiceBot.handlers.UploadingPhotosModeHandler;
 import net.bot.RiceBot.model.Enums.Role;
 import net.bot.RiceBot.model.Enums.State;
-import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
+import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -25,11 +25,11 @@ public class TelegramFacade {
     private final RegLoginHandler regLoginHandler;
     private final NullStateHandler nullStateHandler;
     private final ChangeDataHandler changeDataHandler;
-    private final UserServiceImpl userService;
+    private final UserServiceImplDB userService;
     private final UploadingPhotosModeHandler uploadingPhotosModeHandler;
 
     @Autowired
-    public TelegramFacade(RegLoginHandler regLoginHandler, NullStateHandler nullStateHandler, ChangeDataHandler changeDataHandler, UserServiceImpl userService, UploadingPhotosModeHandler uploadingPhotosModeHandler) {
+    public TelegramFacade(RegLoginHandler regLoginHandler, NullStateHandler nullStateHandler, ChangeDataHandler changeDataHandler, UserServiceImplDB userService, UploadingPhotosModeHandler uploadingPhotosModeHandler) {
         this.regLoginHandler = regLoginHandler;
         this.nullStateHandler = nullStateHandler;
         this.changeDataHandler = changeDataHandler;

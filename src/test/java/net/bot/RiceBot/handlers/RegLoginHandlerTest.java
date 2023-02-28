@@ -1,15 +1,14 @@
 package net.bot.RiceBot.handlers;
 
-import net.bot.RiceBot.model.Account;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
-import net.bot.RiceBot.repository.AccountRepository;
-import net.bot.RiceBot.service.db.Implementations.UserServiceImpl;
+
+import net.bot.RiceBot.service.db.Implementations.AccountServiceImplDB;
+import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,17 +20,15 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class RegLoginHandlerTest {
     @Autowired
     private RegLoginHandler handler;
     @MockBean
-    private AccountRepository accountRepository;
+    private AccountServiceImplDB accountRepository;
     @MockBean
-    private UserServiceImpl userService;
+    private UserServiceImplDB userService;
     @MockBean
     private LocaleMessageService messageService;
 
@@ -40,7 +37,7 @@ class RegLoginHandlerTest {
         User usr = new User(12L);
         usr.setState(State.ASK_LOGIN);
         String msg = "testLogin";
-        Mockito.doReturn(new ArrayList<Account>())
+        Mockito.doReturn(true)
                 .when(accountRepository)
                 .isFreeUsername(msg);
         Mockito.doReturn("Логин зафиксировал, теперь пароль давай, екарный бабай")
