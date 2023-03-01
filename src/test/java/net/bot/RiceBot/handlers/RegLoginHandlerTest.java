@@ -5,6 +5,7 @@ import net.bot.RiceBot.model.User;
 
 import net.bot.RiceBot.service.db.Implementations.AccountServiceImplDB;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
+import net.bot.RiceBot.service.db.UserService;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class RegLoginHandlerTest {
     @MockBean
     private AccountServiceImplDB accountRepository;
     @MockBean
-    private UserServiceImplDB userService;
+    private UserService userService;
     @MockBean
     private LocaleMessageService messageService;
 

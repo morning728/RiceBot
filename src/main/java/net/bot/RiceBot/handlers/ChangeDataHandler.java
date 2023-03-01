@@ -3,6 +3,7 @@ package net.bot.RiceBot.handlers;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
+import net.bot.RiceBot.service.db.UserService;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,9 +15,9 @@ import java.util.Objects;
 public class ChangeDataHandler implements InputMessageHandler{
 
     private final LocaleMessageService messageService;
-    private final UserServiceImplDB userService;
+    private final UserService userService;
 
-    public ChangeDataHandler(LocaleMessageService messageService, UserServiceImplDB userService) {
+    public ChangeDataHandler(LocaleMessageService messageService, UserService userService) {
         this.messageService = messageService;
         this.userService = userService;
     }

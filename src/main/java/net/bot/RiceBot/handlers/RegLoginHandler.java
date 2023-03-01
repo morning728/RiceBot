@@ -7,6 +7,7 @@ import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
 import net.bot.RiceBot.service.db.Implementations.AccountServiceImplDB;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
+import net.bot.RiceBot.service.db.UserService;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,11 +21,11 @@ public class RegLoginHandler implements InputMessageHandler {
 
     //TEMP
     private final AccountServiceImplDB accountService;
-    private final UserServiceImplDB userService;
+    private final UserService userService;
     private final LocaleMessageService messageService;
     private final State FAIL_STATE = State.FAIL_REG;
 
-    public RegLoginHandler(AccountServiceImplDB accountService, UserServiceImplDB userService, LocaleMessageService messageService) {
+    public RegLoginHandler(AccountServiceImplDB accountService, UserService userService, LocaleMessageService messageService) {
         this.accountService = accountService;
         this.userService = userService;
         this.messageService = messageService;

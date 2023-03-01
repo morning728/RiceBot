@@ -5,8 +5,9 @@ import net.bot.RiceBot.config.BotConfig;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.Photo;
 import net.bot.RiceBot.service.PhotoHandler;
-import net.bot.RiceBot.service.db.Implementations.PhotoServiceImplDB;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
+import net.bot.RiceBot.service.db.PhotoService;
+import net.bot.RiceBot.service.db.UserService;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,14 @@ import java.util.List;
 @Component
 public class UploadingPhotosModeHandler implements InputMessageHandler {
     //TEEEEEEMP
-    private final PhotoServiceImplDB photoService;
-    private final UserServiceImplDB userService;
+    private final PhotoService photoService;
+    private final UserService userService;
     private final BotConfig bot;
 
     private Date date = null;
 
     @Autowired
-    public UploadingPhotosModeHandler(PhotoServiceImplDB photoService, UserServiceImplDB userService, BotConfig bot) {
+    public UploadingPhotosModeHandler(PhotoService photoService, UserService userService, BotConfig bot) {
         this.photoService = photoService;
         this.userService = userService;
         this.bot = bot;

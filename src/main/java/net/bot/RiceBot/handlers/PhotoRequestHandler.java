@@ -4,8 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.bot.RiceBot.config.BotConfig;
 import net.bot.RiceBot.model.Photo;
 import net.bot.RiceBot.service.PhotoHandler;
-import net.bot.RiceBot.service.db.Implementations.PhotoServiceImplDB;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
+import net.bot.RiceBot.service.db.PhotoService;
+import net.bot.RiceBot.service.db.UserService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -34,10 +35,10 @@ import java.util.zip.ZipOutputStream;
 @Component
 public class PhotoRequestHandler implements InputMessageHandler{
 
-    private final UserServiceImplDB userService;
+    private final UserService userService;
     //TEMP
     private final BotConfig bot;
-    private final PhotoServiceImplDB photoService;
+    private final PhotoService photoService;
 
     private final DefaultAbsSender sender = new DefaultAbsSender(new DefaultBotOptions()) {
         @Override
@@ -46,7 +47,7 @@ public class PhotoRequestHandler implements InputMessageHandler{
         }
     };
 
-    public PhotoRequestHandler(UserServiceImplDB userService, BotConfig bot, PhotoServiceImplDB photoService) {
+    public PhotoRequestHandler(UserService userService, BotConfig bot, PhotoService photoService) {
 
         this.userService = userService;
         this.bot = bot;

@@ -3,8 +3,9 @@ package net.bot.RiceBot.handlers;
 import lombok.extern.slf4j.Slf4j;
 import net.bot.RiceBot.model.Photo;
 import net.bot.RiceBot.service.PhotoHandler;
-import net.bot.RiceBot.service.db.Implementations.PhotoServiceImplDB;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
+import net.bot.RiceBot.service.db.PhotoService;
+import net.bot.RiceBot.service.db.UserService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,11 +19,11 @@ import java.util.List;
 @Component
 @Slf4j
 public class PhotoMiniHandler implements InputMessageHandler{
-    private final UserServiceImplDB userService;
+    private final UserService userService;
 
-    private final PhotoServiceImplDB photoService;
+    private final PhotoService photoService;
 
-    public PhotoMiniHandler(UserServiceImplDB userService, PhotoServiceImplDB photoService) {
+    public PhotoMiniHandler(UserService userService, PhotoService photoService) {
         this.userService = userService;
         this.photoService = photoService;
     }

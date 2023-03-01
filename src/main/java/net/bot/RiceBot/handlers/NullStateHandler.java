@@ -2,6 +2,7 @@ package net.bot.RiceBot.handlers;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
+import net.bot.RiceBot.service.db.UserService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -22,14 +23,14 @@ public class NullStateHandler implements InputMessageHandler{
     private final PhotoMiniHandler photoMiniHandler;
     private final HelpHandler helpHandler;
     private final ChatGPTHandler chatHandler;
-    private final UserServiceImplDB userService;
+    private final UserService userService;
 
     private final Map<String, InputMessageHandler> connections = new HashMap<>();
 
 
 
 
-    public NullStateHandler(ChangeDataHandler changeDataHandler, RegLoginHandler regLoginHandler, PhotoRequestHandler photoRequestHandler, PhotoMiniHandler photoMiniHandler, HelpHandler helpHandler, ChatGPTHandler chatHandler, UserServiceImplDB userService) {
+    public NullStateHandler(ChangeDataHandler changeDataHandler, RegLoginHandler regLoginHandler, PhotoRequestHandler photoRequestHandler, PhotoMiniHandler photoMiniHandler, HelpHandler helpHandler, ChatGPTHandler chatHandler, UserService userService) {
         this.changeDataHandler = changeDataHandler;
         this.regLoginHandler = regLoginHandler;
         this.photoRequestHandler = photoRequestHandler;

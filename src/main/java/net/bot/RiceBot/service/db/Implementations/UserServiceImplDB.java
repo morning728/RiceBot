@@ -65,10 +65,6 @@ public class UserServiceImplDB implements UserService {
         return repository.findById(id).get();
     }
     @Override
-    public User getUserByIdSafly(Long id) {
-        return repository.findById(id).isEmpty() ? null : repository.findById(id).get();
-    }
-    @Override
     public void setPasswordById(Long id, String password){
         repository.setPasswordById(id, password);
     }

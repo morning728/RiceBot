@@ -11,7 +11,7 @@ public interface UserService {
     public User add(User user);
     public void deleteById(Long id);
     public User getUserById(Long id);
-    public User getUserByIdSafly(Long id);
+
     public void setStateById(Long id, State state);
     public void setRoleById(Long id, Role role);
     public boolean isRegistered(Long id);
