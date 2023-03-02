@@ -10,7 +10,7 @@ import net.bot.RiceBot.service.db.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class UserServiceImplDB implements UserService {
     private final UserRepository repository;
     @Autowired

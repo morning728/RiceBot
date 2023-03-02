@@ -3,8 +3,7 @@ package net.bot.RiceBot.handlers;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
 
-import net.bot.RiceBot.service.db.Implementations.AccountServiceImplDB;
-import net.bot.RiceBot.service.db.Implementations.UserServiceImplDB;
+import net.bot.RiceBot.service.db.AccountService;
 import net.bot.RiceBot.service.db.UserService;
 import net.bot.RiceBot.service.messages.LocaleMessageService;
 import org.junit.Assert;
@@ -27,7 +26,7 @@ class RegLoginHandlerTest {
     @Autowired
     private RegLoginHandler handler;
     @MockBean
-    private AccountServiceImplDB accountRepository;
+    private AccountService accountRepository;
     @MockBean
     private UserService userService;
     @MockBean
