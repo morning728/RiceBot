@@ -6,10 +6,15 @@ import net.bot.RiceBot.model.Enums.Role;
 import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
 import net.bot.RiceBot.service.db.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -18,9 +23,16 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class UserServiceImplJSON implements UserService {
-    private final String PATH = "src/main/resources/data/users.json";
+    //@Value("${data.Path}")
+    //InputStream is = ClassLoader.getSystemResourceAsStream("\\data\\users.json");
+    private final URL PATH = ClassLoader.getSystemResource("\\users.json");
     private final ObjectMapper mapper = new ObjectMapper();
-    private final File dbDile = new File(PATH);
+    private final File dbDile = new File("src/main/resources/data/users.json");
+
+    public UserServiceImplJSON() throws URISyntaxException {
+    }
+
+
     @Override
     public User add(User user) {
         try {
@@ -53,7 +65,8 @@ public class UserServiceImplJSON implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        User user = null;
+        User user = new User(id);
+        log.error(dbDile.getAbsolutePath());
         try {
             List<User> usersList = Arrays.stream((mapper.readValue(dbDile, User[].class))).collect(Collectors.toList());
             if (usersList.stream().noneMatch(usr -> Objects.equals(usr.getId(), id))) {
@@ -68,6 +81,11 @@ public class UserServiceImplJSON implements UserService {
                         get();
             }
         } catch (IOException e) {
+            try {
+                mapper.writeValue(dbDile, new ArrayList<User>());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             log.error(e.toString());
         }
         return user;

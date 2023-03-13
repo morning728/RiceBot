@@ -21,13 +21,12 @@ public class Test {
 //        System.out.println(jsonString.get(0).getId());
 
 
-        PhotoServiceImplJSON s = new PhotoServiceImplJSON();
-        List<Photo> allPhotos = s.getPhotos(
-                "f",
-                PhotoHandler.parseDate("1.1.1970"),
-                new Date(System.currentTimeMillis())
-        );
-        System.out.println(allPhotos);
+//        List<Photo> allPhotos = s.getPhotos(
+//                "f",
+//                PhotoHandler.parseDate("1.1.1970"),
+//                new Date(System.currentTimeMillis())
+//        );
+//        System.out.println(allPhotos);
         //mapper.writeValue(new File(PATH), photoList);
 
     }

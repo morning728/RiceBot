@@ -2,22 +2,23 @@ package net.bot.RiceBot.service.db.Implementations.JSONImpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.bot.RiceBot.config.BotConfig;
 import net.bot.RiceBot.model.Account;
 import net.bot.RiceBot.service.db.AccountService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class AccountServiceImplJSON implements AccountService {
-    private final String PATH = "src/main/resources/data/accounts.json";
+
+
+    private final String PATH = "BOOT-INF\\classes\\data\\accounts.json";
     private final ObjectMapper mapper = new ObjectMapper();
     private final File dbDile = new File(PATH);
 

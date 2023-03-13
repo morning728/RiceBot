@@ -5,9 +5,11 @@ import net.bot.RiceBot.model.Enums.State;
 import net.bot.RiceBot.model.User;
 import org.springframework.data.repository.query.Param;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
+
     public User add(User user);
     public void deleteById(Long id);
     public User getUserById(Long id);

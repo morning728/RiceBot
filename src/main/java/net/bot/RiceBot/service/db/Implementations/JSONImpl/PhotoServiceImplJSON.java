@@ -2,25 +2,26 @@ package net.bot.RiceBot.service.db.Implementations.JSONImpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.bot.RiceBot.config.BotConfig;
 import net.bot.RiceBot.model.Photo;
 import net.bot.RiceBot.service.db.PhotoService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class PhotoServiceImplJSON implements PhotoService {
-    private final String PATH = "src/main/resources/data/photos.json";
+
+    private final String PATH = "BOOT-INF\\classes\\data\\accounts.json";
     private final ObjectMapper mapper = new ObjectMapper();
     private final File dbDile = new File(PATH);
+
     @Override
     public List<Photo> getPhotos(String owner_username, Date date) {
         List<Photo> photoList = new ArrayList<>();
