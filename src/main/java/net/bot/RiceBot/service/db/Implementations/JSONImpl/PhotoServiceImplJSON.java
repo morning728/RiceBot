@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 @Slf4j
 public class PhotoServiceImplJSON implements PhotoService {
     private final String PATH = "src/main/resources/data/photos.json";

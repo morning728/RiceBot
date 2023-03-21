@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-//@Service
+@Service
 public class AccountServiceImplDB implements AccountService {
     private final AccountRepository repository;
 

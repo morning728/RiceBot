@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Service
+//@Service
 @Slf4j
 public class AccountServiceImplJSON implements AccountService {
     private final String PATH = "src/main/resources/data/accounts.json";
